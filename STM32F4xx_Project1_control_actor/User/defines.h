@@ -27,20 +27,15 @@
  */
 #ifndef TM_DEFINES_H
 #define TM_DEFINES_H
-#define sim5215		1
-#define debug 		1
-#define ggg 			1
-#define port      6069
-#define server		"52.25.161.238"
 
 //#define TM_USART1_USE_CUSTOM_IRQ
-//#define TM_USART2_USE_CUSTOM_IRQ
-
-/* If you need to change settings for your SPI, then uncomment lines you want to change */
-/* Replace x with SPI number, 1 - 6 */
-#define FATFS_USE_SDIO	1
-/* Enable Card detect pin */
-#define FATFS_USE_DETECT_PIN 0
+//#define TM_USART3_USE_CUSTOM_IRQ
+//#define TM_USART6_USE_CUSTOM_IRQ
+///* If you need to change settings for your SPI, then uncomment lines you want to change */
+///* Replace x with SPI number, 1 - 6 */
+//#define FATFS_USE_SDIO	1
+///* Enable Card detect pin */
+//#define FATFS_USE_DETECT_PIN 0
 
 /* define DTMF*/
 
@@ -80,8 +75,13 @@
 #define RELAY_DK1_PIN					GPIO_PIN_0
 #define RELAY_DK2_PORT				GPIOC
 #define RELAY_DK2_PIN					GPIO_PIN_2
+#define RELAY_DK3_PORT				GPIOB
+#define RELAY_DK3_PIN					GPIO_PIN_10
 #define RELAY_DK4_PORT				GPIOB
-#define RELAY_DK4_PIN					GPIO_PIN_9
+#define RELAY_DK4_PIN					GPIO_PIN_14
+/* define Buzzer */
+#define BUZZER_PORT						GPIOB
+#define BUZZER_PIN						GPIO_PIN_9
 /* defile weigand INPUT*/
 #define W1_D0_PORT 						GPIOA
 #define W1_D0_PIN							GPIO_PIN_3
