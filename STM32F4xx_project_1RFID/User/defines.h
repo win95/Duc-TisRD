@@ -35,7 +35,7 @@
 
 #define TM_USART6_USE_CUSTOM_IRQ
 #define TM_USART3_USE_CUSTOM_IRQ
-
+#define TM_USART2_USE_CUSTOM_IRQ
 /* If you need to change settings for your SPI, then uncomment lines you want to change */
 /* Replace x with SPI number, 1 - 6 */
 #define FATFS_USE_SDIO	1
@@ -47,9 +47,9 @@
 #define DTMF_BIT0_PORT				GPIOD
 #define DTMF_BIT0_PIN					GPIO_PIN_15
 #define DTMF_BIT1_PORT				GPIOD
-#define DTMF_BIT1_PIN					GPIO_PIN_5
+#define DTMF_BIT1_PIN					GPIO_PIN_7
 #define DTMF_BIT2_PORT				GPIOD
-#define DTMF_BIT2_PIN					GPIO_PIN_6
+#define DTMF_BIT2_PIN					GPIO_PIN_7
 #define DTMF_BIT3_PORT				GPIOD
 #define DTMF_BIT3_PIN					GPIO_PIN_7
 

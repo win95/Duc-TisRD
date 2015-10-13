@@ -1,49 +1,28 @@
 /**
- *  Defines for your entire project at one place
- * 
- *	@author 	Tilen Majerle
- *	@email		tilen@majerle.eu
- *	@website	http://stm32f4-discovery.com
- *	@version 	v1.0
+ *	Keil project for TIS
+ *	@author		tran nhat duc
+ *	@email		ducbk55@gmail.com
+ *	@website	TIS.Vn
  *	@ide		Keil uVision 5
- *	@license	GNU GPL v3
- *	
- * |----------------------------------------------------------------------
- * | Copyright (C) Tilen Majerle, 2014
- * | 
- * | This program is free software: you can redistribute it and/or modify
- * | it under the terms of the GNU General Public License as published by
- * | the Free Software Foundation, either version 3 of the License, or
- * | any later version.
- * |  
- * | This program is distributed in the hope that it will be useful,
- * | but WITHOUT ANY WARRANTY; without even the implied warranty of
- * | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * | GNU General Public License for more details.
- * | 
- * | You should have received a copy of the GNU General Public License
- * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * |----------------------------------------------------------------------
+ *	@packs		STM32F4xx Keil packs version 2.2.0 or greater required
+ *	@stdperiph	STM32F4xx Standard peripheral drivers version 1.4.0 or greater required
  */
 #ifndef TM_DEFINES_H
 #define TM_DEFINES_H
-#define sim5215		1
-#define debug 		1
-#define ggg 			1
-#define port      6069
-#define server		"52.25.161.238"
 
-#define TM_USART6_USE_CUSTOM_IRQ
-#define TM_USART3_USE_CUSTOM_IRQ
+/*Define use usart ISR*/
+#define TM_USART6_USE_CUSTOM_IRQ 	//com2
+#define TM_USART3_USE_CUSTOM_IRQ 	// com1
+#define TM_USART2_USE_CUSTOM_IRQ	// com extention
 
-/* If you need to change settings for your SPI, then uncomment lines you want to change */
-/* Replace x with SPI number, 1 - 6 */
+/* SIDO for SDCARD*/
 #define FATFS_USE_SDIO	1
 /* Enable Card detect pin */
 #define FATFS_USE_DETECT_PIN 0
+/* Use writeprotect pin */
+#define FATFS_USE_WRITEPROTECT_PIN		0
 
 /* define DTMF*/
-
 #define DTMF_BIT0_PORT				GPIOD
 #define DTMF_BIT0_PIN					GPIO_PIN_15
 #define DTMF_BIT1_PORT				GPIOD
@@ -57,7 +36,6 @@
 #define DTMF_BIT4_PIN					GPIO_PIN_0
 
 /* define Sw*/
-
 #define ADD_BIT0_PORT					GPIOD
 #define ADD_BIT0_PIN					GPIO_PIN_0
 #define ADD_BIT1_PORT					GPIOD
@@ -82,8 +60,6 @@
 #define RELAY_DK2_PIN					GPIO_PIN_2
 #define RELAY_DK3_PORT				GPIOD
 #define RELAY_DK3_PIN					GPIO_PIN_10
-//#define RELAY_DK3_PORT				GPIOB
-//#define RELAY_DK3_PIN					GPIO_PIN_9
 #define RELAY_DK4_PORT				GPIOD
 #define RELAY_DK4_PIN					GPIO_PIN_11
 /* define Buzzer */
@@ -103,7 +79,7 @@
 #define CCU_DIR_PORT 					GPIOA
 #define CCU_DIR_PIN						GPIO_PIN_11
 
-/* Control pins */
+/* Control LCD */
 /* RS - Register select pin */
 #define HD44780_RS_PORT			GPIOE
 #define HD44780_RS_PIN			GPIO_Pin_8
@@ -126,15 +102,6 @@
 /* D7 - Data 7 pin */
 #define HD44780_D7_PORT			GPIOE
 #define HD44780_D7_PIN			GPIO_Pin_7
-
-///* Overwrite default CARD DETECT pin */		
-//#define FATS_DETECT_PORT         GPIOB
-//#define FATFS_DETECT_PIN          GPIO_PIN_6
-/* Use detect pin */
-//#define FATFS_USE_DETECT_PIN			1
-/* Use writeprotect pin */
-#define FATFS_USE_WRITEPROTECT_PIN		0
-
 
 
 #endif
