@@ -27,7 +27,6 @@
  */
 #ifndef TM_DEFINES_H
 #define TM_DEFINES_H
-
 //#define TM_USART1_USE_CUSTOM_IRQ
 //#define TM_USART3_USE_CUSTOM_IRQ
 //#define TM_USART6_USE_CUSTOM_IRQ

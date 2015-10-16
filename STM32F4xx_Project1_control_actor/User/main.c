@@ -9,6 +9,7 @@
  */
 /* Include core modules */
 #include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
 /* Include my libraries here */
 #include "defines.h"
 #include "tm_stm32f4_delay.h"

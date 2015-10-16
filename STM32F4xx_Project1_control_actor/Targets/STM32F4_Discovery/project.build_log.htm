@@ -26,13 +26,70 @@ Project File Date:  10/06/2015
 
 <h2>Output:</h2>
 Build target 'STM32F4-Discovery'
-".\Targets\STM32F4_Discovery\project.axf" - 0 Error(s), 0 Warning(s).
+compiling tm_stm32f4_disco.c...
+compiling tm_stm32f4_fatfs.c...
+compiling tm_stm32f4_gpio.c...
+compiling tm_stm32f4_usart.c...
+compiling tm_stm32f4_adc.c...
+compiling tm_stm32f4_delay.c...
+compiling tm_stm32f4_exti.c...
+compiling tm_stm32f4_hd44780.c...
+compiling tm_stm32f4_watchdog.c...
+compiling main.c...
+User\main.c(52): warning:  #1295-D: Deprecated declaration send_485 - give arg types
+  int send_485();
+User\main.c(53): warning:  #1295-D: Deprecated declaration recv_485 - give arg types
+  int recv_485();
+User\main.c(70): warning:  #1295-D: Deprecated declaration turn_on_dk1 - give arg types
+  int turn_on_dk1();
+User\main.c(71): warning:  #1295-D: Deprecated declaration turn_off_dk1 - give arg types
+  int turn_off_dk1();
+User\main.c(73): warning:  #1295-D: Deprecated declaration turn_on_dk2 - give arg types
+  int   turn_on_dk2();
+User\main.c(74): warning:  #1295-D: Deprecated declaration turn_off_dk2 - give arg types
+  int turn_off_dk2();
+User\main.c(76): warning:  #1295-D: Deprecated declaration turn_on_dk3 - give arg types
+  int   turn_on_dk3();
+User\main.c(77): warning:  #1295-D: Deprecated declaration turn_off_dk3 - give arg types
+  int turn_off_dk3();
+User\main.c(79): warning:  #1295-D: Deprecated declaration turn_on_dk4 - give arg types
+  int   turn_on_dk4();
+User\main.c(80): warning:  #1295-D: Deprecated declaration turn_off_dk4 - give arg types
+  int turn_off_dk4();
+User\main.c(604): warning:  #940-D: missing return statement at end of non-void function "turn_on_dk1"
+  }
+User\main.c(607): warning:  #940-D: missing return statement at end of non-void function "turn_off_dk1"
+  }
+User\main.c(610): warning:  #940-D: missing return statement at end of non-void function "turn_on_dk2"
+  }
+User\main.c(613): warning:  #940-D: missing return statement at end of non-void function "turn_off_dk2"
+  }
+User\main.c(616): warning:  #940-D: missing return statement at end of non-void function "turn_on_dk3"
+  }
+User\main.c(619): warning:  #940-D: missing return statement at end of non-void function "turn_off_dk3"
+  }
+User\main.c(622): warning:  #940-D: missing return statement at end of non-void function "turn_on_dk4"
+  }
+User\main.c(625): warning:  #940-D: missing return statement at end of non-void function "turn_off_dk4"
+  }
+User\main.c(626): warning:  #1-D: last line of file ends without a newline
+   
+User\main.c: 19 warnings, 0 errors
+compiling diskio.c...
+compiling ff.c...
+compiling fatfs_sd_sdio.c...
+linking...
+.\Targets\STM32F4_Discovery\project.axf: Error: L6218E: Undefined symbol send_485 (referred from main.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 1 error messages.
+".\Targets\STM32F4_Discovery\project.axf" - 1 Error(s), 19 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   E:\Duc-TisRD\STM32F4xx_Project1_control_actor\RTE
   E:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0
 
 <h2>Collection of Component Files used:</h2>
+Target not created.
 </pre>
 </body>
 </html>

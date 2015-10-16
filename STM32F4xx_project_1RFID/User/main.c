@@ -37,7 +37,7 @@
 
 unsigned char  Process=0;	
 	
-unsigned char flag_RFID = 0;	/*Send SelectCard */		
+	
 unsigned char flag_RFID1=0;
 unsigned char flag_RFID2=0;
 unsigned char flag_PC=0;
@@ -50,9 +50,8 @@ int i=0;
 int LEDStatus=0;
 char BufferCom1[50];
 char BufferCom2[50];
-char BufferCom3[50];
-char UID1[50];
-char UID2[50];
+char UID1[20];
+char UID2[20];
 volatile uint8_t counter = 0;
 /* Khoi Ban phim */
 unsigned char express;
@@ -188,15 +187,12 @@ int main(void) {
 	TM_GPIO_Init(RELAY_DK2_PORT, RELAY_DK2_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
 	TM_GPIO_Init(RELAY_DK3_PORT, RELAY_DK3_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
 	TM_GPIO_Init(RELAY_DK4_PORT, RELAY_DK4_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
-/* Initialize USART6 at 115200 baud, TX: PC6, RX: PC7 , COM 1 - RFID1 gan cong tac nguon*/ 
+/* Initialize USART6 at 115200 baud, TX: PC6, RX: PC7 , COM 1 gan cong tac nguon*/ 
 	TM_USART_Init(USART6, TM_USART_PinsPack_1, 115200);
-/* Initialize USART3 at 115200 baud, TX: PD8, RX: PD9 ,	COM 2 -RFID 2 gan ethernet*/
-	TM_USART_Init(USART3, TM_USART_PinsPack_3, 115200);
+/* Initialize USART3 at 115200 baud, TX: PD8, RX: PD9 ,	COM 2 gan ethernet*/
+	TM_USART_Init(USART3, TM_USART_PinsPack_3, 9600);
 /* Initialize USART1 at 115200 baud, TX: PA9, RX: PA10, CONG 485 */
 	TM_USART_Init(USART1, TM_USART_PinsPack_1, 9600);
-	/* Initialize USART2, with custom pins */					// COM 3 extension PC
-	//TM_USART_Init(USART2, TM_USART_PinsPack_Custom,9600);
-	TM_USART_Init(USART2, TM_USART_PinsPack_2,9600);
 	
 /* int DIR 485 set = send , reset = recvice*/ 
 	TM_GPIO_Init(CCU_DIR_PORT, CCU_DIR_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_High);
@@ -234,17 +230,48 @@ int main(void) {
 
 //		TM_USART_BufferEmpty(USART3);
 //		TM_USART_BufferEmpty(USART6);
-		flag_RFID2=0;	
+		
 		flag_RFID1=0;
 	/*end by duc*/
 	while (1) {
+
+		/*process LCD*/
+//	if(flag_LCD){
+//		//sprintf(buffer_lcd,"ROLE1:%d %3ds\n\rROLE2:%d %3ds\n\rTimer:%3ds",flag_W1D0,timer_dk1,flag_W1D1,timer_dk2,timeout);
+//		sprintf(buffer_lcd,"ROLE1:%d %3ds\n\rROLE3,4:%d %d\n\rID:%s",flag_R11,timer_dk1,flag_R12,flag_R22,UID);
+//		TM_HD44780_Puts(0, 0,buffer_lcd); /* 0 dong 1, 1 dong 2*/
+//		//sprintf(buffer_lcd,"line 3");
+//		//TM_HD44780_Puts(0, 0,buffer_lcd);
+//		flag_LCD=0;
+//	}
 /*process 485*/
 	if(flag_485){
 	flag_485=0;
 	if(LEDStatus==0) TM_USART_Puts(USART1, "/LED000>\r\n");
 	if(LEDStatus==1) TM_USART_Puts(USART1, "/LED001>\r\n");
 	if(LEDStatus==2) TM_USART_Puts(USART1, "/LED002>\r\n");
-	}	
+//	if(LEDStatus==0) TM_USART_Puts(USART3, "/LED000>\r\n");
+//	if(LEDStatus==1) TM_USART_Puts(USART3, "/LED001>\r\n");
+//	if(LEDStatus==2) TM_USART_Puts(USART3, "/LED002>\r\n");
+	}
+///*process RFID*/
+//if(flag_RFID)
+//{	
+//	TM_USART_Puts(USART3,SelectCard);
+//	flag_RFID=0;
+//}
+///*process com1*/
+//	if(flag_com1){
+//	//sprintf(buffer,"%d,%d",car_number,1);
+//	TM_USART_Putc(USART6,IDCAR[0]);
+//	TM_USART_Putc(USART6,IDCAR[1]);
+//	TM_USART_Putc(USART6,IDCAR[2]);
+//	TM_USART_Putc(USART6,IDCAR[3]);
+//	TM_USART_Putc(USART6,',');
+//	TM_USART_Putc(USART6,'1');
+//	flag_com1=0;
+//	}
+//	
 /* xu li W1D0 - dk1*/
 	if(flag_W1D0){
 		turn_on_dk1();
@@ -282,7 +309,7 @@ if(flag_RFID1==1)
 			sprintf(UID1,"%02x %02x %02x %02x %02x %02x %02x,1",IDCAR1[0],IDCAR1[1],IDCAR1[2],IDCAR1[3],IDCAR1[4],IDCAR1[5],IDCAR1[6]);
 			}
 		TM_HD44780_Puts(0, 2,"Waiting PC..."); /* 0 dong 1, 1 dong 2*/
-		if(Process)TM_USART_Puts(USART2,UID1);
+		TM_USART_Puts(USART3,UID1);
 		WaitPC(200);
 		flag_RFID1=0;
 		if(flag_PC)
@@ -294,39 +321,7 @@ if(flag_RFID1==1)
 		else Process=0;
 		flag_RFID1=0;
 	}
-if(flag_RFID2==1)
-		{	
-		
-		Process=1;
-		IDCAR2[0]=BufferCom2[4];
-		IDCAR2[1]=BufferCom2[5];
-		IDCAR2[2]=BufferCom2[6];
-		IDCAR2[3]=BufferCom2[7];
-		IDCAR2[4]=BufferCom2[8];
-		IDCAR2[5]=BufferCom2[9];
-		IDCAR2[6]=BufferCom2[10];
-		
-		if(BufferCom2[1]==0x08)	
-			{
-			sprintf(UID2,"%02x %02x %02x %02x ,2",IDCAR2[0],IDCAR2[1],IDCAR2[2],IDCAR2[3]);
-			}
-		if(BufferCom2[1]==0x0B) 
-			{
-			sprintf(UID2,"%02x %02x %02x %02x %02x %02x %02x ,2",IDCAR2[0],IDCAR2[1],IDCAR2[2],IDCAR2[3],IDCAR2[4],IDCAR2[5],IDCAR2[6]);
-			}
-		TM_HD44780_Puts(0, 2,"Waiting PC..."); /* 0 dong 1, 1 dong 2*/
-		if(Process)TM_USART_Puts(USART2,UID2);
-		WaitPC(200);
-		flag_RFID2=0;
-		if(flag_PC)
-		{
-			TM_HD44780_Puts(0, 2,"Door opened.."); /* 0 dong 1, 1 dong 2*/
-			flag_PC=0;
-			ProcessAction();
-		}
-		else Process=0;
-		flag_RFID2=0;
-	}
+
 		
 /**/
 timer_dk1 = timerdk1/2;	
@@ -454,6 +449,15 @@ void WaitPC(unsigned int t)
 	}
 }
 
+//void TM_USART3_ReceiveHandler(uint8_t c) {	 // com 2
+//	//c=TM_USART_Getc(USART3);
+//	TM_USART_Puts(USART6,"RFID buffer");
+//	TM_USART_Gets(USART3, buffer,sizeof(buffer));
+//	TM_USART_Puts(USART6,buffer);
+
+//	memset(buffer,'\0',0);
+
+//}
 void TM_EXTI_Handler(uint16_t GPIO_Pin) {
 	/* Handle external line 0 interrupts */
 	if (GPIO_Pin == DTMF_BIT4_PIN) {
@@ -566,39 +570,23 @@ void CustomTIMER1_Task(void* UserParameters) {
 			timerdk4++;
 		}
 	}
-void CustomTIMER2_Task(void* UserParameters) {
-	TM_USART_BufferEmpty(USART2);
+void CustomTIMER2_Task(void* UserParameters) 
+{
+
 	TM_USART_BufferEmpty(USART6);
 	TM_USART_Puts(USART6,SelectCard);
-	TM_USART_Puts(USART3,SelectCard);
 }
 
-void TM_USART6_ReceiveHandler(uint8_t c) {	// RFID2
-	static uint8_t cnt=0;
-	if(c==0xBD)cnt=0;
-	BufferCom2[cnt]=c;
-	if((BufferCom2[3]==0x00)&&(cnt==BufferCom2[3]+1)&&cnt)
-	{
-		flag_RFID2=1;
-		memset(BufferCom2,'\0',0);
-	}
-	if(cnt<48)cnt++;
-
-}
-
-void TM_USART3_ReceiveHandler(uint8_t c) {	// RFID1
+void TM_USART6_ReceiveHandler(uint8_t c) {	// RFID
 	static uint8_t cnt=0;
 	if(c==0xBD)cnt=0;
 	BufferCom1[cnt]=c;
-	if((BufferCom1[3]==0x00)&&(cnt==BufferCom1[3]+1)&&cnt){
-		memset(BufferCom1,'\0',0);
-		flag_RFID1=1;
-	}
+	if((BufferCom1[3]==0x00)&&(cnt==BufferCom1[3]+1)&&cnt) flag_RFID1=1;
 	if(cnt<48)cnt++;
 
 }
 
-void TM_USART2_ReceiveHandler(uint8_t c) {	// PC
+void TM_USART3_ReceiveHandler(uint8_t c) {	// PC
 	static uint8_t cnt=0;
 	if(c=='R')cnt=0;
 	BufferCom2[cnt]=c;
@@ -608,7 +596,8 @@ void TM_USART2_ReceiveHandler(uint8_t c) {	// PC
 }
 
 
-void read_sw_add(void){
+void read_sw_add(void)
+	{
 	unsigned int sw_add[8];
 //	int k =0;
 //	int i=0;

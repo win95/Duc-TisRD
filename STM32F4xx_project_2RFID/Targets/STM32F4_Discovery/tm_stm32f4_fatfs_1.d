@@ -37,3 +37,8 @@
 .\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: ..\00-STM32F4xx_STANDARD_PERIPHERAL_DRIVERS\STM32F4xx_StdPeriph_Driver\inc\stm32f4xx_fsmc.h
 .\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: .\User\defines.h
 .\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: ..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.h
+.\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: ..\00-STM32F429_LIBRARIES\fatfs\ff.h
+.\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: ..\00-STM32F429_LIBRARIES\fatfs\integer.h
+.\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: ..\00-STM32F429_LIBRARIES\fatfs\ffconf.h
+.\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: ..\00-STM32F429_LIBRARIES\fatfs\diskio.h
+.\targets\stm32f4_discovery\tm_stm32f4_fatfs_1.o: ..\00-STM32F429_LIBRARIES\attributes.h
