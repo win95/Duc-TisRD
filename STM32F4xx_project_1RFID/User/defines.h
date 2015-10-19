@@ -27,11 +27,6 @@
  */
 #ifndef TM_DEFINES_H
 #define TM_DEFINES_H
-#define sim5215		1
-#define debug 		1
-#define ggg 			1
-#define port      6069
-#define server		"52.25.161.238"
 
 #define TM_USART6_USE_CUSTOM_IRQ
 #define TM_USART3_USE_CUSTOM_IRQ

@@ -40,7 +40,13 @@ unsigned char flag_RFID = 0;	/*Send SelectCard */
 unsigned char flag_RFID1=0;
 unsigned char flag_RFID2=0;
 unsigned char flag_PC=0;
-
+char *vip_id[5] = {
+	"b7 7b 87 52",
+	"04 30 8a aa 3f 3e 80",
+	"01 12 34 45",
+	"01 12 34 45",
+	"01 12 34 45"
+	};
 char SelectCard[4]= {0xBA,0x02,0x01,0xB9};       
 char IDCAR1[7]={0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 char IDCAR2[7]={0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -90,6 +96,7 @@ unsigned char flag_R22 =0;
 unsigned char flag_R31 =0;
 	
 
+int check_vip(char * name);
 /* value DIP switch*/
 unsigned char value_dip =0;
 /* Khoi OUTPUT*/
@@ -244,6 +251,7 @@ int main(void) {
 	if(LEDStatus==1) TM_USART_Puts(USART1, "/LED001>\r\n");
 	if(LEDStatus==2) TM_USART_Puts(USART1, "/LED002>\r\n");
 	}	
+
 /* xu li W1D0 - dk1*/
 	if(flag_W1D0){
 		turn_on_dk1();
@@ -281,7 +289,15 @@ if(flag_RFID1==1)
 			sprintf(UID1,"%02x %02x %02x %02x %02x %02x %02x,1",IDCAR1[0],IDCAR1[1],IDCAR1[2],IDCAR1[3],IDCAR1[4],IDCAR1[5],IDCAR1[6]);
 			}
 		TM_HD44780_Puts(0, 2,"Waiting PC..."); /* 0 dong 1, 1 dong 2*/
+				if(check_vip(UID1)){
+			flag_PC=1;
+			flag_R11=1;
+			timerdk1 =0;
+			Process=0;
+		}
+		else{
 		if(Process)TM_USART_Puts(USART2,UID1);
+		}
 		WaitPC(200);
 		flag_RFID1=0;
 		if(flag_PC)
@@ -314,7 +330,14 @@ if(flag_RFID2==1)
 			sprintf(UID2,"%02x %02x %02x %02x %02x %02x %02x ,2",IDCAR2[0],IDCAR2[1],IDCAR2[2],IDCAR2[3],IDCAR2[4],IDCAR2[5],IDCAR2[6]);
 			}
 		TM_HD44780_Puts(0, 2,"Waiting PC..."); /* 0 dong 1, 1 dong 2*/
-		if(Process)TM_USART_Puts(USART2,UID2);
+			if(check_vip(UID2)){
+			flag_PC=1;
+			flag_R31=1;
+			timerdk2 =0;
+			Process=0;
+		}
+		else{
+		if(Process)TM_USART_Puts(USART2,UID2);}
 		WaitPC(200);
 		flag_RFID2=0;
 		if(flag_PC)
@@ -336,6 +359,7 @@ if (timer_dk1 >= timeout){
 			timerdk1=0;
 			timer_dk1=0;
 			flag_RFID1=0;
+			flag_RFID2=0;
 			Process=0;
 //			if(LEDStatus==0) TM_USART_Puts(USART3, "/LED000>\r\n");
 		}
@@ -566,19 +590,17 @@ void CustomTIMER1_Task(void* UserParameters) {
 		}
 	}
 void CustomTIMER2_Task(void* UserParameters) {
-	TM_USART_BufferEmpty(USART2);
-	TM_USART_BufferEmpty(USART6);
+
 	TM_USART_Puts(USART6,SelectCard);
 	TM_USART_Puts(USART3,SelectCard);
 }
-
 void TM_USART6_ReceiveHandler(uint8_t c) {	// RFID2
 	static uint8_t cnt=0;
 	if(c==0xBD)cnt=0;
 	BufferCom2[cnt]=c;
 	if((BufferCom2[3]==0x00)&&(cnt==BufferCom2[3]+1)&&cnt)
 	{
-		flag_RFID2=1;
+		if(Process==0)flag_RFID2=1;
 		memset(BufferCom2,'\0',0);
 	}
 	if(cnt<48)cnt++;
@@ -591,7 +613,7 @@ void TM_USART3_ReceiveHandler(uint8_t c) {	// RFID1
 	BufferCom1[cnt]=c;
 	if((BufferCom1[3]==0x00)&&(cnt==BufferCom1[3]+1)&&cnt){
 		memset(BufferCom1,'\0',0);
-		flag_RFID1=1;
+		if(Process==0)flag_RFID1=1;
 	}
 	if(cnt<48)cnt++;
 
@@ -668,5 +690,13 @@ int send_485(){
 }
 int recv_485(){
 	TM_GPIO_SetPinLow(CCU_DIR_PORT,CCU_DIR_PIN);
+	return 0;
+}
+int check_vip(char * name){
+	int i =0;
+	for(i=0;i<5;i++){
+	if(strstr(name,vip_id[i]))
+		return 1;
+	}
 	return 0;
 }

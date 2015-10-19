@@ -25,12 +25,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define start 0x01
-#define stop 	0x0A
-#define roledk1 	0x31
-#define roledk2 	0x32
-#define BE				0xBE
-
 //============================================
 //  Command List, preamble + length + command 
 //============================================
@@ -42,7 +36,14 @@ unsigned char flag_RFID1=0;
 unsigned char flag_RFID2=0;
 unsigned char flag_PC=0;
 
-char SelectCard[4]= {0xBA,0x02,0x01,0xB9};       
+char SelectCard[4]= {0xBA,0x02,0x01,0xB9};
+char *vip_id[5] = {
+	"b7 7b 87 52",
+	"04 30 8a aa 3f 3e 80",
+	"01 12 34 45",
+	"01 12 34 45",
+	"01 12 34 45"
+	};
 char IDCAR1[7]={0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 char IDCAR2[7]={0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 int car_number =0;
@@ -88,7 +89,7 @@ unsigned char flag_R21 =0;
 unsigned char flag_R12 =0;
 unsigned char flag_R22 =0;
 unsigned char flag_R31 =0;
-	
+int check_vip(char * name);
 
 /* value DIP switch*/
 unsigned char value_dip =0;
@@ -132,11 +133,6 @@ void ProcessAction(void);
 
 int main(void) {
 		char str[100];
-
-//		char buffer1[100];
-		
-//	/* Free and total space */
-//	uint32_t total, free;
 	
 	/* Initialize system */
 	SystemInit();
@@ -227,64 +223,24 @@ int main(void) {
 
 	/*creat by duc*/
 		TM_WATCHDOG_Reset();
-
-//		TM_USART_BufferEmpty(USART3);
-//		TM_USART_BufferEmpty(USART6);
-		
 		flag_RFID1=0;
 	/*end by duc*/
 	while (1) {
-
-		/*process LCD*/
-//	if(flag_LCD){
-//		//sprintf(buffer_lcd,"ROLE1:%d %3ds\n\rROLE2:%d %3ds\n\rTimer:%3ds",flag_W1D0,timer_dk1,flag_W1D1,timer_dk2,timeout);
-//		sprintf(buffer_lcd,"ROLE1:%d %3ds\n\rROLE3,4:%d %d\n\rID:%s",flag_R11,timer_dk1,flag_R12,flag_R22,UID);
-//		TM_HD44780_Puts(0, 0,buffer_lcd); /* 0 dong 1, 1 dong 2*/
-//		//sprintf(buffer_lcd,"line 3");
-//		//TM_HD44780_Puts(0, 0,buffer_lcd);
-//		flag_LCD=0;
-//	}
 /*process 485*/
 	if(flag_485){
 	flag_485=0;
 	if(LEDStatus==0) TM_USART_Puts(USART1, "/LED000>\r\n");
 	if(LEDStatus==1) TM_USART_Puts(USART1, "/LED001>\r\n");
 	if(LEDStatus==2) TM_USART_Puts(USART1, "/LED002>\r\n");
-//	if(LEDStatus==0) TM_USART_Puts(USART3, "/LED000>\r\n");
-//	if(LEDStatus==1) TM_USART_Puts(USART3, "/LED001>\r\n");
-//	if(LEDStatus==2) TM_USART_Puts(USART3, "/LED002>\r\n");
 	}
-///*process RFID*/
-//if(flag_RFID)
-//{	
-//	TM_USART_Puts(USART3,SelectCard);
-//	flag_RFID=0;
-//}
-///*process com1*/
-//	if(flag_com1){
-//	//sprintf(buffer,"%d,%d",car_number,1);
-//	TM_USART_Putc(USART6,IDCAR[0]);
-//	TM_USART_Putc(USART6,IDCAR[1]);
-//	TM_USART_Putc(USART6,IDCAR[2]);
-//	TM_USART_Putc(USART6,IDCAR[3]);
-//	TM_USART_Putc(USART6,',');
-//	TM_USART_Putc(USART6,'1');
-//	flag_com1=0;
-//	}
-//	
 /* xu li W1D0 - dk1*/
 	if(flag_W1D0){
 		turn_on_dk1();
-		//flag_W1D0=0;
 	}
 /* xu li W1D1 - dk2*/
 	if(flag_W1D1){
 		turn_on_dk2();
-		//flag_W1D1=0;
 	}
-	//TM_WATCHDOG_Reset();
-//		/*end*/
-
 
 if(Process!=1)
 		TM_HD44780_Puts(0, 2,"Wait for Card"); /* 0 dong 1, 1 dong 2*/
@@ -309,7 +265,15 @@ if(flag_RFID1==1)
 			sprintf(UID1,"%02x %02x %02x %02x %02x %02x %02x,1",IDCAR1[0],IDCAR1[1],IDCAR1[2],IDCAR1[3],IDCAR1[4],IDCAR1[5],IDCAR1[6]);
 			}
 		TM_HD44780_Puts(0, 2,"Waiting PC..."); /* 0 dong 1, 1 dong 2*/
+		if(check_vip(UID1)){
+			flag_PC=1;
+			flag_R11=1;
+			timerdk1 =0;
+		}
+//		WaitPC(200);
+		else
 		TM_USART_Puts(USART3,UID1);
+//		}
 		WaitPC(200);
 		flag_RFID1=0;
 		if(flag_PC)
@@ -332,20 +296,17 @@ if (timer_dk1 >= timeout){
 			timerdk1=0;
 			timer_dk1=0;
 			flag_RFID1=0;
+			flag_RFID2=0;
 			Process=0;
-//			if(LEDStatus==0) TM_USART_Puts(USART3, "/LED000>\r\n");
 		}
 timer_dk2 = timerdk2/2;
 if (timer_dk2 >= timeout){
 			turn_off_dk2();
-			//flag_R21 =0;
 			flag_R31 =0;
 			flag_W1D1=0;
 			timerdk2=0;
 			timer_dk2=0;
-			//flag_RFID1=0;
 			Process=0;
-//			if(LEDStatus==0) TM_USART_Puts(USART3, "/LED000>\r\n");
 		}
 timer_dk3 = timerdk3;
 if (timer_dk3 >= 1){
@@ -361,8 +322,6 @@ if (timer_dk4 >= 1){
 			timer_dk4=0;
 			timerdk4=0;
 		}
-
-
 		TM_WATCHDOG_Reset();
 }
 }
@@ -449,15 +408,7 @@ void WaitPC(unsigned int t)
 	}
 }
 
-//void TM_USART3_ReceiveHandler(uint8_t c) {	 // com 2
-//	//c=TM_USART_Getc(USART3);
-//	TM_USART_Puts(USART6,"RFID buffer");
-//	TM_USART_Gets(USART3, buffer,sizeof(buffer));
-//	TM_USART_Puts(USART6,buffer);
 
-//	memset(buffer,'\0',0);
-
-//}
 void TM_EXTI_Handler(uint16_t GPIO_Pin) {
 	/* Handle external line 0 interrupts */
 	if (GPIO_Pin == DTMF_BIT4_PIN) {
@@ -572,10 +523,11 @@ void CustomTIMER1_Task(void* UserParameters) {
 	}
 void CustomTIMER2_Task(void* UserParameters) 
 {
-
+//	if(Process==0){
 	TM_USART_BufferEmpty(USART6);
 	TM_USART_Puts(USART6,SelectCard);
-}
+	}
+//	}
 
 void TM_USART6_ReceiveHandler(uint8_t c) {	// RFID
 	static uint8_t cnt=0;
@@ -657,4 +609,12 @@ int send_485(){
 }
 int recv_485(){
 	TM_GPIO_SetPinLow(CCU_DIR_PORT,CCU_DIR_PIN);
+}
+int check_vip(char * name){
+	int i =0;
+	for(i=0;i<5;i++){
+	if(strstr(name,vip_id[i]))
+		return 1;
+	}
+	return 0;
 }
